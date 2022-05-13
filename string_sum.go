@@ -61,7 +61,6 @@ func StringSum(input string) (output string, err error) {
 	if len(el2) > 2 {
 		return "", fmt.Errorf("%w", errorNotTwoOperands)
 	}
-	fmt.Println("el222=", el2, len(el2))
 	if len(el2) < 2 {
 		return "", fmt.Errorf("%w", errorNotTwoOperands)
 	}

@@ -2,6 +2,10 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"log"
+	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -23,5 +27,49 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	input = strings.TrimSpace(input)
+	if input == "" {
+		log.Fatal(errorEmptyInput)
+	}
+
+	el := strings.Split(input, "")
+	var el2 []string
+	for i := 0; i < len(el); i++ {
+		if el[i] == " " {
+			continue
+		}
+		if el[i] == "+" {
+			continue
+		}
+		el2 = append(el2, el[i])
+	}
+	var c, d string
+	for i := 0; i < len(el2); i++ {
+		if el2[0] == "-" {
+			c = el2[0]
+			copy(el2[0:], el2[0+1:])
+			el2[len(el2)-1] = ""
+			el2 = el2[:len(el2)-1]
+		}
+		if el2[i] == "-" {
+			d = el2[i]
+			copy(el2[i:], el2[i+1:])
+			el2[len(el2)-1] = ""
+			el2 = el2[:len(el2)-1]
+		}
+	}
+	if len(el2) < 2 {
+		log.Fatal(errorNotTwoOperands)
+	}
+	a, err := strconv.ParseInt(c+el2[0], 10, 64)
+	if err != nil {
+		log.Fatal("Error summand number one is not correct", err)
+	}
+
+	b, err := strconv.ParseInt(d+el2[1], 10, 64)
+	if err != nil {
+		log.Fatal("Error summand number two is not correct", err)
+	}
+	output = fmt.Sprintln(strconv.FormatInt(a+b, 10))
+	return output, nil
 }

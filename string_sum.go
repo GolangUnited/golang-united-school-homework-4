@@ -3,7 +3,6 @@ package string_sum
 import (
 	"errors"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -29,7 +28,7 @@ var (
 func StringSum(input string) (output string, err error) {
 	input = strings.TrimSpace(input)
 	if input == "" {
-		log.Fatal(errorEmptyInput)
+		return "", fmt.Errorf("%w", errorEmptyInput)
 	}
 
 	el := strings.Split(input, "")
@@ -39,34 +38,45 @@ func StringSum(input string) (output string, err error) {
 			continue
 		}
 		if el[i] == "+" {
-			el[i] = ","
+			el[i] = "/"
 			el2 = append(el2, el[i])
 			continue
 		}
-		/* 		if el[i] == "-" {
-			el[i] = ",-"
-		} */
+		if el[i] == "-" {
+			el[i] = "/-"
+		}
 		el2 = append(el2, el[i])
 	}
 	input = strings.Join(el2, "")
-	el = strings.Split(strings.TrimSpace(input), ",")
-	if len(el) > 2 {
-		log.Fatal(errorNotTwoOperands)
+	el = strings.Split((input), "/")
+	el2 = nil
+	for i := 0; i < len(el); i++ {
+		if el[i] == "" {
+			copy(el[i:], el[i+1:])
+			el[len(el)-1] = ""
+			el = el[:len(el)-1]
+		}
+		el2 = append(el2, el[i])
 	}
-	fmt.Println("el=", el, len(el))
-	if len(el) < 2 {
-		log.Fatal(errorNotTwoOperands)
+	if len(el2) > 2 {
+		return "", fmt.Errorf("%w", errorNotTwoOperands)
+	}
+	fmt.Println("el222=", el2, len(el2))
+	if len(el2) < 2 {
+		return "", fmt.Errorf("%w", errorNotTwoOperands)
 	}
 
-	a, err := strconv.ParseInt(el[0], 10, 64)
+	a, err := strconv.Atoi(el2[0])
 	if err != nil {
-		log.Fatal("Error summand number one is not correct", err)
+		e := err.(*strconv.NumError)
+		return "", fmt.Errorf("{Func: %s, Num: %s, Err: %w}, numError: %t", e.Func, e.Num, e.Err, true)
 	}
 
-	b, err := strconv.ParseInt(el[1], 10, 64)
+	b, err := strconv.Atoi(el2[1])
 	if err != nil {
-		log.Fatal("Error summand number two is not correct", err)
+		e := err.(*strconv.NumError)
+		return "", fmt.Errorf("{Func: %s, Num: %s, Err: %w}, numError: %t", e.Func, e.Num, e.Err, true)
 	}
-	output = fmt.Sprint(strconv.FormatInt(a+b, 10))
+	output = fmt.Sprint(strconv.Itoa(a + b))
 	return output, nil
 }

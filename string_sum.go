@@ -67,14 +67,12 @@ func StringSum(input string) (output string, err error) {
 
 	a, err := strconv.Atoi(el2[0])
 	if err != nil {
-		e := err.(*strconv.NumError)
-		return "", fmt.Errorf("{Func: %s, Num: %s, Err: %w}, numError: %t", e.Func, e.Num, e.Err, true)
+		return "", fmt.Errorf("bad %w", err)
 	}
 
 	b, err := strconv.Atoi(el2[1])
 	if err != nil {
-		e := err.(*strconv.NumError)
-		return "", fmt.Errorf("{Func: %s, Num: %s, Err: %w}, numError: %t", e.Func, e.Num, e.Err, true)
+		return "", fmt.Errorf("bad %w", err)
 	}
 	output = fmt.Sprint(strconv.Itoa(a + b))
 	return output, nil

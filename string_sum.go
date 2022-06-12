@@ -27,16 +27,13 @@ var (
 
 func StringSum(input string) (output string, err error) {
 	strings.TrimSpace(input)
+	input = strings.ReplaceAll(input, " ", "")
 
 	if input == "" {
 		return "", fmt.Errorf("%w", errorEmptyInput)
 	}
 
 	stringNumbers := strings.Split(input, "+")
-
-	if len(stringNumbers) != 2 {
-		return "", fmt.Errorf("%w", errorNotTwoOperands)
-	}
 
 	if len(stringNumbers) == 1 {
 		ind := strings.LastIndex(input, "-")
@@ -46,6 +43,10 @@ func StringSum(input string) (output string, err error) {
 		}
 
 		return calculator(input[:ind], input[ind:])
+	}
+
+	if len(stringNumbers) != 2 {
+		return "", fmt.Errorf("%w", errorNotTwoOperands)
 	}
 
 	return calculator(stringNumbers[0], stringNumbers[1])
